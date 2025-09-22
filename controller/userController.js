@@ -64,8 +64,8 @@ module.exports=
                const {userId,postId} = req.body
                
                const sub= await Models.likesModel.findAndCountAll({
-                   where:{  postId: postId.trim(),
-                            userId: userId.trim()
+                   where:{  postId: postId,
+                            userId: userId
                    },
                   include:[{
                    model:Models.userModel,
