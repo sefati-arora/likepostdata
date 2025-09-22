@@ -7,4 +7,6 @@ router.post('/user',userController.user);
 router.post('/signUp',Usercontrol.signUp);
 router.post('/userlike',Usercontrol.userlike);
 router.post('/getuserlike',Usercontrol.getuserlike);
+router.post('/postComment',Usercontrol.postComment);
+router.post('/getpostcomment',Usercontrol.getpostcomment);
 module.exports=router;
