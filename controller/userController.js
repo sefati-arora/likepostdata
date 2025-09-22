@@ -6,10 +6,7 @@ Models.userModel.hasMany(Models.likesModel, { foreignKey: "userId", as: "likesGi
 Models.likesModel.belongsTo(Models.userModel, { foreignKey: "userId", as: "User" });
 Models.PostModel.hasMany(Models.likesModel,{foreignKey:"postId",as:"likesReceived"});
 Models.likesModel.belongsTo(Models.PostModel, { foreignKey: "postId", as: "post" });
-Models.userModel.hasMany(Models.commentModel,{foreignKey:"userId",as:"commentGiven"});
-Models.commentModel.belongsTo(Models.userModel,{foreignKey:"userId",as:"usercomment"});
-Models.PostModel.hasMany(Models.commentModel,{foreignKey:"postId",as:"commentRecevied"});
-Models.commentModel.belongsTo(Models.PostModel,{foreignKey:"postId",as:"postcomment"});
+
 
 module.exports=
 {
@@ -89,47 +86,5 @@ module.exports=
              return res.status(400).json({message:"ERROR in fetching data"})
            }
        },
-       postComment:async(req,res) =>
-       {
-        try{
-            const schema=Joi.object({
-                userId:Joi.string().required(),
-                postId:Joi.string().required()
-            });
-            const payload=await helper.validationJoi(req.body,schema);
-            const comment=await Models.commentModel.create({
-                userId:payload.userId,
-                postId:payload.postId
-            });
-            return res.status(200).json({message:"comment related data entered",comment});
-        }
-        catch(error)
-        {
-        console.log(error);
-        return res.status(400).json({message:"ERROR while entering data in comment table"});
-        }
-       },
-       getpostcomment:async(req ,res) =>
-       {
-        try{
-            console.log(">>>>>>>>>",req.body);
-            const{postId}=req.body;
-            const commit= await Models.commentModel.findAndCountAll({where:{postId:postId},
-            include:[{
-                model:Models.userModel,
-                as:"usercomment",
-         } ,
-        {
-            model:Models.PostModel,
-            as:"postcomment",
-        }]});
-        console.log(",,,",commit);
-        return res.status(200).json({message:"Comment data entered",commit})
-        }
-        catch(error)
-        {
-         console.log(error);
-         return res.status(400).json({message:"ERROR while entering comment model related data"})
-        }
-       }
+      
 }
