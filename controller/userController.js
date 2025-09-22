@@ -2,6 +2,8 @@ const Models = require("../models/index");
 const Joi = require("joi");
 const helper = require("../helper/validation");
 const commonhelper = require("../helper/commonHelper");
+const jwt=require("jsonwebtoken")
+require("dotenv").config();
 Models.userModel.hasMany(Models.likesModel, { foreignKey: "userId", as: "likesGiven" });
 Models.likesModel.belongsTo(Models.userModel, { foreignKey: "userId", as: "User" });
 Models.PostModel.hasMany(Models.likesModel,{foreignKey:"postId",as:"likesReceived"});
@@ -26,7 +28,9 @@ module.exports=
                 phoneNumber:payload.phoneNumber,
                 Bio:payload.Bio
             })
-            return res.status(200).json({message:"UserData entered successfully",user})
+            const token=jwt.sign({id:user.id},process.env.SECRET_KEY);
+            console.log(process.env.SECRET_KEY);
+            return res.status(200).json({message:"UserData entered successfully",user,token});
         }
         catch(error)
         {

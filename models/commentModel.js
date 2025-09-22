@@ -24,6 +24,12 @@ module.exports = (Sequelize, sequelize, DataTypes) => {
         onUpdate: "CASCADE",
         onDelete: "CASCADE",
       },
+      Messages:{
+        type:DataTypes.STRING(255),
+        allowNull:true,
+      }
+
+      
     },
     {
       tableName: "commenttable",

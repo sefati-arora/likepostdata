@@ -1,7 +1,7 @@
 const Models = require("../models/index");
 const Joi = require("joi");
 const helper = require("../helper/validation");
-const commonhelper = require("../helper/commonHelper");
+const authData=require('../middleware/authentication');
 Models.userModel.hasMany(Models.commentModel,{foreignKey:"userId",as:"commentGiven"});
 Models.commentModel.belongsTo(Models.userModel,{foreignKey:"userId",as:"usercomment"});
 Models.PostModel.hasMany(Models.commentModel,{foreignKey:"postId",as:"commentRecevied"});
@@ -11,15 +11,20 @@ module.exports=
 {
          postComment:async(req,res) =>
            {
-            try{
-                const schema=Joi.object({
-                    userId:Joi.string().required(),
-                    postId:Joi.string().required()
+                 try{
+                    
+                   const schema=Joi.object({
+                     //userId:Joi.string().required(),
+                    postId:Joi.string().required(),
+                    Messages:Joi.string().required(),
                 });
-                const payload=await helper.validationJoi(req.body,schema);
-                const comment=await Models.commentModel.create({
-                    userId:payload.userId,
-                    postId:payload.postId
+                   const userId=req.user.id;
+                   console.log("....",userId)
+                  const payload=await helper.validationJoi(req.body,schema);
+                  const comment=await Models.commentModel.create({
+                    userId:userId,
+                    postId:payload.postId,
+                    Messages:payload.Messages
                 });
                 return res.status(200).json({message:"comment related data entered",comment});
             }
@@ -37,12 +42,9 @@ module.exports=
                 const commit= await Models.commentModel.findAndCountAll({where:{postId:postId},
                 include:[{
                     model:Models.userModel,
-                    as:"usercomment",
+                   as:"usercomment",
              } ,
-            {
-                model:Models.PostModel,
-                as:"postcomment",
-            }]});
+           ]});
             console.log(",,,",commit);
             return res.status(200).json({message:"Comment data entered",commit})
             }
