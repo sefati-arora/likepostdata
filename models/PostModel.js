@@ -11,7 +11,17 @@ module.exports=(Sequelize,sequelize,DataTypes) =>
             Description:{
                 type:DataTypes.STRING(255),
                 allowNull:false
-            }
+            },
+            userId: {
+        type: DataTypes.UUID,
+        allowNull: true,
+        references: {
+          model: "usertables",  
+          key: "id",
+        },
+        onUpdate: "CASCADE",
+        onDelete: "CASCADE",
+      },
         },
         {
            tableName:"PostRtable"

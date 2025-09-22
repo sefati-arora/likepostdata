@@ -9,6 +9,7 @@ module.exports = {
        console.log(">>>>>",req.files);
       const schema = Joi.object({
         Description: Joi.string().required(),
+        userId:Joi.string().required()
       });
       const payload = await helper.validationJoi(req.body, schema);
       let file = req.files?.file;
@@ -24,7 +25,8 @@ module.exports = {
         const filepath = await commonhelper.fileUpload(file[i]);
         await Models.PostModel.create({
           userPost: filepath,
-          Description:payload.Description
+          Description:payload.Description,
+          userId:payload.userId
         });
       }
       return res.status(200).json({ message: "images enter successfully" });
